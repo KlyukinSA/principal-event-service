@@ -12,13 +12,13 @@ public class ContractController {
     private final ContractService contractService;
 
     @PostMapping
-    @PreAuthorize("HasRole(ADMIN)") // Authentication::getId -> adminId of contractRequest
+    @PreAuthorize("HasRole('ADMIN')") // Authentication::getId -> adminId of contractRequest
     Contract create(@RequestBody ContractRequest contractRequest) {
         return contractService.create(contractRequest);
     }
 
     @PutMapping("{id}")
-    @PreAuthorize("HasRole(PRINCIPAL)")
+    @PreAuthorize("HasRole('PRINCIPAL')")
     Contract accept(@PathVariable long id) {
         return contractService.accept(id);
     }

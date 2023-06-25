@@ -15,15 +15,14 @@ import org.springframework.stereotype.Service;
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
 
-    public SomeUser create(Request request) {
-//        System.out.println("try register" + request.getUsername());
-        if (userRepository.findByUsername(request.getUsername()) != null) {
+    public SomeUser create(UserRequest userRequest) {
+        if (userRepository.findByUsername(userRequest.getUsername()) != null) {
             return null;
         }
         return userRepository.save(SomeUser.builder()
-                        .username(request.getUsername())
-                        .password(request.getPassword())
-                        .role(request.getRole())
+                        .username(userRequest.getUsername())
+                        .password(userRequest.getPassword())
+                        .role(userRequest.getRole())
                         .build()
         );
     }
@@ -39,14 +38,9 @@ public class UserService implements UserDetailsService {
             case ADMIN -> user.setRoleDetails((AdminDetails) roleDetails);
             case PRINCIPAL -> user.setRoleDetails((PrincipalDetails) roleDetails);
         }
-//        user.setRoleDetails(roleDetails);
         userRepository.save(user);
         return user.getRoleDetails();
     }
-
-//    AdminDetails addAdminDetails(long userId, AdminDetails roleDetails) {
-//        return
-//    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

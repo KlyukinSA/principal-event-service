@@ -15,8 +15,8 @@ public class EventService {
     private final StakeRepository stakeRepository;
     private final ContractRepository contractRepository;
 
-    public Event create(long adminId, Request request) {
-        var optionalAdmin = userRepository.findById(adminId);
+    public Event create(EventRequest eventRequest) {
+        var optionalAdmin = userRepository.findById(eventRequest.getAdminId());
         if (optionalAdmin.isEmpty()) {
             return null;
         }
@@ -26,8 +26,8 @@ public class EventService {
         }
         return eventRepository.save(Event.builder()
                 .admin(optionalAdmin.get())
-                .name(request.getName())
-                .cost(request.getCost())
+                .name(eventRequest.getName())
+                .cost(eventRequest.getCost())
                 .build());
     }
 

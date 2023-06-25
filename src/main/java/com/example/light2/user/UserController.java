@@ -5,6 +5,7 @@ import com.example.light2.user.details.ParticipantDetails;
 import com.example.light2.user.details.PrincipalDetails;
 import com.example.light2.user.details.RoleDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,28 +14,21 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
 
-    @PostMapping
-    SomeUser create(@RequestBody Request request) {
-        return userService.create(request);
-    }
-
-//    @PutMapping("{id}")
-//    RoleDetails addDetails(@PathVariable long id, @RequestBody RoleDetails roleDetails) {
-//        return userService.addDetails(id, roleDetails);
-//    }
-
     @PutMapping("participants/{id}")
+    @PreAuthorize("HasRole('PARTICIPANT')")
     ParticipantDetails addParticipantDetails(@PathVariable long id, @RequestBody ParticipantDetails roleDetails) {
         return (ParticipantDetails) userService.addDetails(id, (RoleDetails) roleDetails);
     }
 
     @PutMapping("admins/{id}")
+    @PreAuthorize("HasRole('ADMIN')")
     AdminDetails addAdminDetails(@PathVariable long id, @RequestBody AdminDetails roleDetails) {
         return (AdminDetails) userService.addDetails(id, (RoleDetails) roleDetails);
     }
 
     @PutMapping("principals/{id}")
-    PrincipalDetails addParticipantDetails(@PathVariable long id, @RequestBody PrincipalDetails roleDetails) {
+    @PreAuthorize("HasRole('PRINCIPAL')")
+    PrincipalDetails addPrincipalDetails(@PathVariable long id, @RequestBody PrincipalDetails roleDetails) {
         return (PrincipalDetails) userService.addDetails(id, (RoleDetails) roleDetails);
     }
 }

@@ -1,23 +1,47 @@
 package com.example.light2.event;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/events")
+@RequestMapping("events")
 @RequiredArgsConstructor
 public class EventController {
     private final EventService eventService;
 
-    @GetMapping
-    Iterable<Event> getAll() {
-        return eventService.findAll();
+    @PostMapping
+    @PreAuthorize("HasRole('ADMIN')")
+    Event create(@RequestBody EventRequest eventRequest) {
+        return eventService.create(eventRequest);
     }
 
-//    @PostMapping
-//    void create(EventCreateRequest eventCreateRequest) {
-//        eventRepository.save(Event.builder().name(eventCreateRequest))
-//    }
+    @PostMapping("{id}")
+    @PreAuthorize("HasRole('PARTICIPANT')")
+    public boolean signUp(@PathVariable long id, @RequestBody long participantId) {
+        return eventService.signUp(id, participantId);
+    }
+
+    @PutMapping("{id}")
+    @PreAuthorize("HasRole('ADMIN')")
+    public boolean acceptParticipant(@PathVariable long id, @RequestBody long participantId) {
+        return eventService.acceptParticipant(id, participantId);
+    }
+
+    @GetMapping("{id}")
+    @PreAuthorize("HasRole('PARTICIPANT')")
+    public boolean checkAccepted(@PathVariable long id, @RequestBody long participantId) {
+        return eventService.checkAccepted(id, participantId);
+    }
+
+    @PutMapping("{id}")
+    @PreAuthorize("HasRole('ADMIN')")
+    public boolean confirmParticipantPayment(@PathVariable long id, @RequestBody long participantId) {
+        return eventService.confirmParticipantPayment(id, participantId);
+    }
+
+    @GetMapping
+    Iterable<Event> findAll() {
+        return eventService.findAll();
+    }
 }
