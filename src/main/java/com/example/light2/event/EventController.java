@@ -2,6 +2,7 @@ package com.example.light2.event;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -12,32 +13,32 @@ public class EventController {
 
     @PostMapping
     @PreAuthorize("HasRole('ADMIN')")
-    Event create(@RequestBody EventRequest eventRequest) {
-        return eventService.create(eventRequest);
+    Event create(@RequestBody EventRequest eventRequest, Authentication admin) {
+        return eventService.create(eventRequest, admin.getName());
     }
 
     @PostMapping("{id}")
     @PreAuthorize("HasRole('PARTICIPANT')")
-    public boolean signUp(@PathVariable long id, @RequestBody long participantId) {
-        return eventService.signUp(id, participantId);
+    public boolean signUp(@PathVariable long id, Authentication participant) {
+        return eventService.signUp(id, participant.getName());
     }
 
     @PutMapping("{id}")
     @PreAuthorize("HasRole('ADMIN')")
-    public boolean acceptParticipant(@PathVariable long id, @RequestBody long participantId) {
-        return eventService.acceptParticipant(id, participantId);
+    public boolean acceptParticipant(@PathVariable long id, Authentication participant) {
+        return eventService.acceptParticipant(id, participant.getName());
     }
 
     @GetMapping("{id}")
     @PreAuthorize("HasRole('PARTICIPANT')")
-    public boolean checkAccepted(@PathVariable long id, @RequestBody long participantId) {
-        return eventService.checkAccepted(id, participantId);
+    public boolean checkAccepted(@PathVariable long id, Authentication participant) {
+        return eventService.checkAccepted(id, participant.getName());
     }
 
     @PutMapping("{id}")
     @PreAuthorize("HasRole('ADMIN')")
-    public boolean confirmParticipantPayment(@PathVariable long id, @RequestBody long participantId) {
-        return eventService.confirmParticipantPayment(id, participantId);
+    public boolean confirmParticipantPayment(@PathVariable long id, Authentication participant) {
+        return eventService.confirmParticipantPayment(id, participant.getName());
     }
 
     @GetMapping

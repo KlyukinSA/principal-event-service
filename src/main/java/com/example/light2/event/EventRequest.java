@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class EventRequest {
-    private long adminId;
     private String name;
     private int cost;
 }

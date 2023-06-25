@@ -15,39 +15,39 @@ public class EventService {
     private final StakeRepository stakeRepository;
     private final ContractRepository contractRepository;
 
-    public Event create(EventRequest eventRequest) {
-        var optionalAdmin = userRepository.findById(eventRequest.getAdminId());
-        if (optionalAdmin.isEmpty()) {
+    public Event create(EventRequest eventRequest, String adminName) {
+        var optionalAdmin = userRepository.findByUsername(adminName);
+        if (optionalAdmin == null) {
             return null;
         }
-        var optionalContract = contractRepository.findByAdmin(optionalAdmin.get());
+        var optionalContract = contractRepository.findByAdmin(optionalAdmin);
         if (optionalContract.isEmpty() || !optionalContract.get().isAccepted()) {
             return null;
         }
         return eventRepository.save(Event.builder()
-                .admin(optionalAdmin.get())
+                .admin(optionalAdmin)
                 .name(eventRequest.getName())
                 .cost(eventRequest.getCost())
                 .build());
     }
 
     // only for parti.
-    public boolean signUp(long eventId, long participantId) {
-        var optionalParticipant = userRepository.findById(participantId);
-        if (optionalParticipant.isEmpty()) {
+    public boolean signUp(long eventId, String username) {
+        var optionalParticipant = userRepository.findByUsername(username);
+        if (optionalParticipant == null) {
             return false;
         }
         var optionalEvent = eventRepository.findById(eventId);
         if (optionalEvent.isEmpty()) {
             return false;
         }
-        var optionalParticipantAttempt = stakeRepository.findByEventAndParticipant(optionalEvent.get(), optionalParticipant.get());
+        var optionalParticipantAttempt = stakeRepository.findByEventAndParticipant(optionalEvent.get(), optionalParticipant);
         if (optionalParticipantAttempt.isPresent()) {
             return false;
         }
         Stake participantAttempt = Stake.builder()
                 .event(optionalEvent.get())
-                .participant(optionalParticipant.get())
+                .participant(optionalParticipant)
                 .isAccepted(false)
                 .isPaid(false)
                 .build();
@@ -55,10 +55,10 @@ public class EventService {
         return true;
     }
 
-    public boolean acceptParticipant(long eventId, long participantId) {
-        var optionalParticipant = userRepository.findById(participantId);
+    public boolean acceptParticipant(long eventId, String username) {
+        var optionalParticipant = userRepository.findByUsername(username);
         var optionalEvent = eventRepository.findById(eventId);
-        var optionalParticipantAttempt = stakeRepository.findByEventAndParticipant(optionalEvent.get(), optionalParticipant.get());
+        var optionalParticipantAttempt = stakeRepository.findByEventAndParticipant(optionalEvent.get(), optionalParticipant);
         if (optionalParticipantAttempt.isEmpty()) {
             return false;
         }
@@ -68,17 +68,17 @@ public class EventService {
         return true;
     }
 
-    public boolean checkAccepted(long eventId, long participantId) {
-        var optionalParticipant = userRepository.findById(participantId);
+    public boolean checkAccepted(long eventId, String username) {
+        var optionalParticipant = userRepository.findByUsername(username);
         var optionalEvent = eventRepository.findById(eventId);
-        var optionalParticipantAttempt = stakeRepository.findByEventAndParticipant(optionalEvent.get(), optionalParticipant.get());
+        var optionalParticipantAttempt = stakeRepository.findByEventAndParticipant(optionalEvent.get(), optionalParticipant);
         return optionalParticipantAttempt.map(Stake::isAccepted).orElse(false);
     }
 
-    public boolean confirmParticipantPayment(long eventId, long participantId) {
-        var optionalParticipant = userRepository.findById(participantId);
+    public boolean confirmParticipantPayment(long eventId, String username) {
+        var optionalParticipant = userRepository.findByUsername(username);
         var optionalEvent = eventRepository.findById(eventId);
-        var optionalParticipantAttempt = stakeRepository.findByEventAndParticipant(optionalEvent.get(), optionalParticipant.get());
+        var optionalParticipantAttempt = stakeRepository.findByEventAndParticipant(optionalEvent.get(), optionalParticipant);
         if (optionalParticipantAttempt.isEmpty()) {
             return false;
         }

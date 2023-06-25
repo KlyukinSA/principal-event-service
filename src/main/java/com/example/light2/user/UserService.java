@@ -20,19 +20,18 @@ public class UserService implements UserDetailsService {
             return null;
         }
         return userRepository.save(SomeUser.builder()
-                        .username(userRequest.getUsername())
-                        .password(userRequest.getPassword())
-                        .role(userRequest.getRole())
-                        .build()
+                .username(userRequest.getUsername())
+                .password(userRequest.getPassword())
+                .role(userRequest.getRole())
+                .build()
         );
     }
 
-    RoleDetails addDetails(long userId, RoleDetails roleDetails) {
-        var optionalUser = userRepository.findById(userId);
-        if (optionalUser.isEmpty()) {
+    RoleDetails addDetails(String username, RoleDetails roleDetails) {
+        var user = userRepository.findByUsername(username);
+        if (user == null) {
             return null;
         }
-        var user = optionalUser.get();
         switch (user.getRole()) {
             case PARTICIPANT -> user.setRoleDetails((ParticipantDetails) roleDetails);
             case ADMIN -> user.setRoleDetails((AdminDetails) roleDetails);

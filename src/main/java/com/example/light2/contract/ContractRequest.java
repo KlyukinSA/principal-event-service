@@ -5,6 +5,5 @@ import lombok.Data;
 
 @Data
 public class ContractRequest {
-    private long adminId;
     private String message;
 }
