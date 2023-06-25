@@ -23,4 +23,10 @@ public class ContractController {
     Contract accept(@PathVariable long id) {
         return contractService.accept(id);
     }
+
+    @GetMapping
+    @PreAuthorize("HasRole('PRINCIPAL')")
+    Iterable<Contract> findAll() {
+        return contractService.findAll();
+    }
 }

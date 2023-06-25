@@ -33,4 +33,8 @@ public class ContractService {
         optionalContract.get().setAccepted(true);
         return optionalContract.get();
     }
+
+    public Iterable<Contract> findAll() {
+        return contractRepository.findAll();
+    }
 }
