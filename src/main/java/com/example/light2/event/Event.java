@@ -1,11 +1,10 @@
 package com.example.light2.event;
 
 import com.example.light2.user.SomeUser;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Builder
@@ -17,8 +16,10 @@ public class Event {
     @Id
     @GeneratedValue
     private long id;
-    @OneToOne
-    private SomeUser admin;
     private String name;
     private int cost;
+    @OneToOne
+    private SomeUser admin;
+    @OneToMany
+    private List<SomeUser> participants;
 }

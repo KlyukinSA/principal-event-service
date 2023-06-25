@@ -3,9 +3,12 @@ package com.example.light2.event;
 import com.example.light2.contract.ContractRepository;
 import com.example.light2.stake.Stake;
 import com.example.light2.stake.StakeRepository;
+import com.example.light2.user.Role;
 import com.example.light2.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +31,7 @@ public class EventService {
                 .admin(optionalAdmin)
                 .name(eventRequest.getName())
                 .cost(eventRequest.getCost())
+                .participants(new ArrayList<>())
                 .build());
     }
 
@@ -61,9 +65,8 @@ public class EventService {
         if (optionalParticipantAttempt.isEmpty()) {
             return false;
         }
-        Stake participantAttempt = optionalParticipantAttempt.get();
-        participantAttempt.setAccepted(true);
-        stakeRepository.save(participantAttempt);
+        optionalParticipantAttempt.get().setAccepted(true);
+        optionalEvent.get().getParticipants().add(optionalParticipant.get());
         return true;
     }
 
@@ -88,7 +91,6 @@ public class EventService {
     }
 
     public Iterable<Event> findAll() {
-        eventRepository.save(Event.builder().cost(155).build());
         return eventRepository.findAll();
     }
 }
