@@ -2,6 +2,7 @@ package com.example.light2.contract;
 
 import com.example.light2.user.Role;
 import com.example.light2.user.UserRepository;
+import com.example.light2.user.details.AdminDetails;
 import liquibase.ui.UIService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,14 +13,15 @@ public class ContractService {
     private final ContractRepository contractRepository;
     private final UserRepository adminRepository;
 
-    Contract create(long adminId, String message) {
-        var optionalAdmin = adminRepository.findById(adminId);
+    Contract create(ContractRequest contractRequest) {
+        var optionalAdmin = adminRepository.findById(contractRequest.getAdminId());
         if (optionalAdmin.isEmpty()) { // || optionalAdmin.get().getRole() != Role.ADMIN
             return null;
         }
+        System.out.println(((AdminDetails) optionalAdmin.get().getRoleDetails()).getOrgName());
         return contractRepository.save(Contract.builder()
                 .admin(optionalAdmin.get())
-                .message(message)
+                .message(contractRequest.getMessage())
                 .isAccepted(false)
                 .build());
     }

@@ -4,6 +4,7 @@ import com.example.light2.user.details.RoleDetails;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Set;
+
+import static jakarta.persistence.InheritanceType.SINGLE_TABLE;
 
 @Entity
 @Data
