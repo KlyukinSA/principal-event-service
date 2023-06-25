@@ -25,8 +25,8 @@ public class EventController {
 
     @PutMapping("{id}")
     @PreAuthorize("HasRole('ADMIN')")
-    public boolean acceptParticipant(@PathVariable long id, Authentication participant) {
-        return eventService.acceptParticipant(id, participant.getName());
+    public boolean acceptParticipant(@PathVariable long id, @RequestBody long participantId) {
+        return eventService.acceptParticipant(id, participantId);
     }
 
     @GetMapping("{id}")
@@ -35,10 +35,10 @@ public class EventController {
         return eventService.checkAccepted(id, participant.getName());
     }
 
-    @PutMapping("{id}")
+    @PutMapping("{id}/payment")
     @PreAuthorize("HasRole('ADMIN')")
-    public boolean confirmParticipantPayment(@PathVariable long id, Authentication participant) {
-        return eventService.confirmParticipantPayment(id, participant.getName());
+    public boolean confirmParticipantPayment(@PathVariable long id, @RequestBody long participantId) {
+        return eventService.confirmParticipantPayment(id, participantId);
     }
 
     @GetMapping

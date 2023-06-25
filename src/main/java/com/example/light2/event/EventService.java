@@ -55,10 +55,10 @@ public class EventService {
         return true;
     }
 
-    public boolean acceptParticipant(long eventId, String username) {
-        var optionalParticipant = userRepository.findByUsername(username);
+    public boolean acceptParticipant(long eventId, long participantId) {
+        var optionalParticipant = userRepository.findById(participantId);
         var optionalEvent = eventRepository.findById(eventId);
-        var optionalParticipantAttempt = stakeRepository.findByEventAndParticipant(optionalEvent.get(), optionalParticipant);
+        var optionalParticipantAttempt = stakeRepository.findByEventAndParticipant(optionalEvent.get(), optionalParticipant.get());
         if (optionalParticipantAttempt.isEmpty()) {
             return false;
         }
@@ -75,10 +75,10 @@ public class EventService {
         return optionalParticipantAttempt.map(Stake::isAccepted).orElse(false);
     }
 
-    public boolean confirmParticipantPayment(long eventId, String username) {
-        var optionalParticipant = userRepository.findByUsername(username);
+    public boolean confirmParticipantPayment(long eventId, long participantId) {
+        var optionalParticipant = userRepository.findById(participantId);
         var optionalEvent = eventRepository.findById(eventId);
-        var optionalParticipantAttempt = stakeRepository.findByEventAndParticipant(optionalEvent.get(), optionalParticipant);
+        var optionalParticipantAttempt = stakeRepository.findByEventAndParticipant(optionalEvent.get(), optionalParticipant.get());
         if (optionalParticipantAttempt.isEmpty()) {
             return false;
         }
