@@ -27,7 +27,7 @@ public class UserService implements UserDetailsService {
         );
     }
 
-    RoleDetails addDetails(String username, RoleDetails roleDetails) {
+    public RoleDetails addDetails(String username, RoleDetails roleDetails) {
         var user = userRepository.findByUsername(username);
         if (user == null) {
             return null;

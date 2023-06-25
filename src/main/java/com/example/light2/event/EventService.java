@@ -31,7 +31,6 @@ public class EventService {
                 .build());
     }
 
-    // only for parti.
     public boolean signUp(long eventId, String username) {
         var optionalParticipant = userRepository.findByUsername(username);
         if (optionalParticipant == null) {

@@ -13,12 +13,11 @@ public class ContractService {
     private final ContractRepository contractRepository;
     private final UserRepository adminRepository;
 
-    Contract create(ContractRequest contractRequest, String adminName) {
+    public Contract create(ContractRequest contractRequest, String adminName) {
         var optionalAdmin = adminRepository.findByUsername(adminName);
-        if (optionalAdmin == null) { // || optionalAdmin.get().getRole() != Role.ADMIN
+        if (optionalAdmin == null) {
             return null;
         }
-        System.out.println(((AdminDetails) optionalAdmin.getRoleDetails()).getOrgName());
         return contractRepository.save(Contract.builder()
                 .admin(optionalAdmin)
                 .message(contractRequest.getMessage())
@@ -26,7 +25,7 @@ public class ContractService {
                 .build());
     }
 
-    Contract accept(long contractId) {
+    public Contract accept(long contractId) {
         var optionalContract = contractRepository.findById(contractId);
         if (optionalContract.isEmpty()) {
             return null;
